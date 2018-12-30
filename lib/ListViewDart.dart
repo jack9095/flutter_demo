@@ -116,7 +116,7 @@ class RandomWordsState extends State<RandomWords> {
 
       // ListView中item上的点击交互事件
       onTap: (){
-        setState(() {
+        setState(() {  // 在Flutter的响应式风格的框架中，调用setState() 会为State对象触发build()方法，从而导致对UI的更新
           if (alreadySaved) {
             _save.remove(pair);
           } else {
