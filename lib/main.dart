@@ -40,10 +40,13 @@ class ShoppingListItem extends StatelessWidget {
   })  : product = product,
         super(key: new ObjectKey(product));
 
+  // 该ShoppingListItem widget是无状态的。它将其在构造函​​数中接收到的值存储在final成员变量中，然后在build函数中使用它们。
+  // 例如，inCart布尔值表示在两种视觉展示效果之间切换：一个使用当前主题的主色，另一个使用灰色
   final Product product;
   final bool inCart;
   final CartChangedCallback onCartChanged;
 
+  // 头像的颜色 选中黑色，未选中就是主题颜色
   Color _getColor(BuildContext context) {
     return inCart ? Colors.black54 : Theme.of(context).primaryColor;
   }
@@ -60,18 +63,19 @@ class ShoppingListItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new ListTile(
-      onTap: () {
-        onCartChanged(product, !inCart);
+      onTap: () {  // item的点击事件
+        onCartChanged(product, !inCart);  // 回调到父控件（widget)）
       },
       leading: new CircleAvatar(
         backgroundColor: _getColor(context),
-        child: new Text(product.name[0]),
+        child: new Text(product.name[0]),  // 头像中间是标题的首字母
       ),
       title: new Text(product.name, style: _getTextStyle(context)),
     );
   }
 }
 
+// ListView
 class ShoppingList extends StatefulWidget {
   ShoppingList({Key key, this.products}) : super(key: key);
 
@@ -85,7 +89,8 @@ class _ShoppingListState extends State<ShoppingList> {
   Set<Product> _shoppingCart = new Set<Product>();
 
   void _handleCartChanged(Product product, bool inCart) {
-    setState(() {
+    setState(() {  //  会为State对象触发build()方法，从而导致对UI的更新
+      print("ListItem 点击 回调");
       if (inCart)
         _shoppingCart.add(product);
       else
@@ -101,11 +106,11 @@ class _ShoppingListState extends State<ShoppingList> {
       ),
       body: new ListView(
         padding: new EdgeInsets.symmetric(vertical: 8.0),
-        children: widget.products.map((Product product) {
+        children: widget.products.map((Product product) { // 某一个item回调
           return new ShoppingListItem(
-            product: product,
-            inCart: _shoppingCart.contains(product),
-            onCartChanged: _handleCartChanged,
+            product: product,  // 哪一个item
+            inCart: _shoppingCart.contains(product),  // 数据集合中是否包含这个 itemData,包含返回true，不包含返回false
+            onCartChanged: _handleCartChanged,  // ListItem 回调
           );
         }).toList(),
       ),
